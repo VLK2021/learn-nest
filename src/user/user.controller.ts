@@ -9,20 +9,24 @@ import {
 } from '@nestjs/common';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
+  constructor(private readonly userService: UserService) {}
   @HttpCode(HttpStatus.OK)
   @Get()
-  getAll(): string {
-    return 'hello world';
+  getAll() {
+    return this.userService.getAll();
   }
+  @HttpCode(HttpStatus.OK)
   @Get('/:id')
   getOneUserById(@Param('id') id: string) {
-    return `getOne ${id}`;
+    return this.userService.getOneById(id);
   }
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   createUser(@Body() userDto: CreateUserDto) {
-    return userDto;
+    return this.userService.createUser(userDto);
   }
 }
