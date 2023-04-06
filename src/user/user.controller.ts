@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -23,6 +24,11 @@ export class UserController {
   @Get('/:id')
   getOneUserById(@Param('id') id: string) {
     return this.userService.getOneById(id);
+  }
+  @HttpCode(HttpStatus.CONTINUE)
+  @Delete('/:id')
+  deleteById(@Param('id') id: string) {
+    return this.userService.deleteById(id);
   }
   @HttpCode(HttpStatus.CREATED)
   @Post()

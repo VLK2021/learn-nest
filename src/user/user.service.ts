@@ -11,6 +11,9 @@ export class UserService {
   getOneById(id: string) {
     return this.users.find((user) => user.id === id);
   }
+  deleteById(id: string) {
+    return this.users.filter((user) => user.id === id);
+  }
   createUser(userDto: CreateUserDto) {
     this.users.push({
       ...userDto,
