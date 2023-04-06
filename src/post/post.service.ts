@@ -1,20 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
+import { Post, Prisma } from '@prisma/client';
+
+import { PrismaService } from '../core/prisma.service';
 
 @Injectable()
 export class PostService {
-  private posts = [];
-  getAll() {
-    return this.posts;
+  constructor(private prismaService: PrismaService) {}
+
+  getAll(): Promise<Post[]> {
+    return this.prismaService.post.findMany();
   }
-  getById(id: string) {
-    return this.posts.find((post) => post.id === id);
-  }
-  createPost(postDto: CreatePostDto) {
-    this.posts.push({
-      ...postDto,
-      id: new Date().valueOf(),
+
+  getById(postId: string): Promise<Post> {
+    return this.prismaService.post.findUnique({
+      where: { id: Number(postId) },
     });
-    return postDto;
+  }
+
+  remove(postId: string) {
+    return this.prismaService.post.delete({
+      where: { id: Number(postId) },
+    });
+  }
+
+  createPost(data: Prisma.PostCreateInput): Promise<Post> {
+    return this.prismaService.post.create({ data });
+  }
+
+  updatePost(postData: Prisma.PostCreateInput, postId: string): Promise<Post> {
+    return this.prismaService.post.update({
+      where: { id: Number(postId) },
+      data: {
+        title: postData.title,
+        content: postData.content,
+        published: postData.published,
+      },
+    });
   }
 }

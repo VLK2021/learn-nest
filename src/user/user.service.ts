@@ -18,6 +18,12 @@ export class UserService {
     });
   }
 
+  remove(userId: string) {
+    return this.prismaService.user.delete({
+      where: { id: Number(userId) },
+    });
+  }
+
   createUser(data: Prisma.UserCreateInput): Promise<User> {
     return this.prismaService.user.create({ data });
   }
