@@ -14,6 +14,7 @@ export class PostService {
   getById(postId: string): Promise<Post> {
     return this.prismaService.post.findUnique({
       where: { id: Number(postId) },
+      include: { comments: true },
     });
   }
 

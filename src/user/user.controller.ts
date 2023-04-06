@@ -73,17 +73,44 @@ export class UserController {
     return this.userService.getOneById(id);
   }
 
+  @ApiOperation({ summary: 'Create one user' })
+  @ApiOkResponse({
+    status: 200,
+    schema: {
+      example: {
+        id: 1,
+        email: 'example@gmail.com',
+        name: 'Katya',
+        city: 'Lviv',
+        status: true,
+        age: 32,
+        password: 'qwerty12345',
+      },
+    },
+  })
   @HttpCode(HttpStatus.CREATED)
   @Post()
   createUser(@Body() userDto: CreateUserDto) {
     return this.userService.createUser(userDto);
   }
 
+  @ApiOperation({ summary: 'Update one user' })
+  @ApiOkResponse({
+    status: 200,
+    schema: {
+      example: {
+        name: 'Katya',
+        city: 'Lviv',
+        age: 32,
+      },
+    },
+  })
   @Put('/:id')
   updateUser(@Body() userData: UpdateUserDto, @Param('id') id: string) {
     return this.userService.updateUser(userData, id);
   }
 
+  @ApiOperation({ summary: 'delete one user' })
   @Delete('/:id')
   deleteUser(@Param('id') id: string) {
     return this.userService.remove(id);
