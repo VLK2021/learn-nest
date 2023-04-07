@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';

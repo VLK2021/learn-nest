@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { AuthService } from './auth.service';
@@ -11,7 +11,7 @@ import { PrismaService } from '../core/prisma.service';
   providers: [AuthService, UserService, PrismaService],
   controllers: [AuthController],
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY || 'Secret',
       signOptions: {
