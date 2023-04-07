@@ -34,4 +34,11 @@ export class UserService {
       data: { name: userData.name, city: userData.city, age: userData.age },
     });
   }
+
+  getByEmail(userEmail: string): Promise<User> {
+    return this.prismaService.user.findFirst({
+      where: { email: userEmail },
+    });
+  }
+
 }

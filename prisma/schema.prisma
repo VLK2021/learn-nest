@@ -10,10 +10,10 @@ datasource db {
 model User {
   id       Int       @id @default(autoincrement())
   email    String    @unique
-  name     String
-  city     String
-  status   Boolean
-  age      Int
+  name     String?
+  city     String?
+  status   Boolean?
+  age      Int?
   password String
   posts    Post[]
   Comment  Comment[]
