@@ -12,7 +12,7 @@ model User {
   email    String    @unique
   name     String?
   city     String?
-  status   Boolean?
+  status   Boolean?  @default(false)
   age      Int?
   password String
   posts    Post[]

@@ -7,14 +7,18 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put, UseGuards
-} from "@nestjs/common";
+  Put,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updete-user.dto';
-import { AuthGuard } from "../auth/jwt-auth.guard";
+import { AuthGuard } from '../auth/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('Users')
 @Controller('users')
@@ -49,7 +53,7 @@ export class UserController {
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   getAll() {
     return this.userService.getAll();
   }
@@ -108,6 +112,13 @@ export class UserController {
     },
   })
   @Put('/:id')
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      storage: diskStorage({
+
+      }),
+    }),
+  )
   updateUser(@Body() userData: UpdateUserDto, @Param('id') id: string) {
     return this.userService.updateUser(userData, id);
   }
@@ -118,3 +129,8 @@ export class UserController {
     return this.userService.remove(id);
   }
 }
+
+//const randomName = Array(32)
+//.fill(null)
+//.map(() => Math.round(Math.random() * 16).toString())
+//.join('');
