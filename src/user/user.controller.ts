@@ -8,17 +8,19 @@ import {
   Param,
   Post,
   Put,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { imageFileFilter } from 'src/utils/image.filter';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/updete-user.dto';
 import { AuthGuard } from '../auth/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 @ApiTags('Users')
 @Controller('users')
@@ -115,12 +117,30 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('avatar', {
       storage: diskStorage({
+        destination: './avatar',
+        filename: (req, file, cb) => {
+          const randomName = Array(32)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
 
+          return cb(null, `${randomName}${file.originalname}`);
+        },
       }),
+      fileFilter: imageFileFilter,
     }),
   )
-  updateUser(@Body() userData: UpdateUserDto, @Param('id') id: string) {
+  updateUser(
+    @Body() userData: UpdateUserDto,
+    @Param('id') id: string,
+
+    ) {
     return this.userService.updateUser(userData, id);
+  }
+
+  @Get('avatar/:image')
+  watchFile(@Param('image') image, @Res() res) {
+    return res.sendFile(image, { root: './avatar' });
   }
 
   @ApiOperation({ summary: 'delete one user' })
