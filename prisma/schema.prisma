@@ -40,3 +40,9 @@ model Comment {
   Post      Post?    @relation(fields: [postId], references: [id])
   postId    Int?
 }
+
+//npx prisma generate  -- синхронізація схеми з базою
+//npx prisma migrate dev --name change_user_table --create-only  ---додає нову колонку в базу
+//npx prisma migrate dev --name init
+//prisma format ---  перевіряє на помилки
+
