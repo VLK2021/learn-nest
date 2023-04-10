@@ -1,5 +1,7 @@
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+
+import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from "../auth/auth.service";
 
 @WebSocketGateway({
@@ -14,9 +16,13 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('join')
-  async joinRoom(data: {token:string}) {
-    const userId = await this.authService.getVerifiedUserId(data.token)
-    console.log(userId);
+  async joinRoom(client: Socket, data: { token: string }) {
+    const userId = await this.authService.getVerifiedUserId(data.token);
+    if (!userId) {
+      throw new UnauthorizedException({
+        message: 'Not authorized',
+      });
+    }
   }
 
 }
